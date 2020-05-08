@@ -1,0 +1,28 @@
+<script>
+    var evtSource = new WebSocket('ws://localhost:8080/');
+
+    evtSource.onopen = function() {
+        console.log("Connection to server opened.");
+    };
+
+    evtSource.onmessage = function(e) {
+        var html = document.getElementsByTagName('html')[0];
+        html.innerHTML = e.data
+    };
+
+    evtSource.onerror = function() {
+        console.log("EventSource failed.");
+    };
+
+</script>
+<html>
+<head>
+    <title>this is a test</title>
+</head>
+
+<body>
+this is the body
+</body>
+</html>
+
+<h1>thgis is  test</h1>
