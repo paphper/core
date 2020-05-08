@@ -1,5 +1,5 @@
 {
-    "name": "Paphper/core",
+    "name": "paphper/core",
     "description": "Site generator written in PHP",
     "type": "library",
     "license": "MIT",
