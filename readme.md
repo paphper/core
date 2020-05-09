@@ -1,4 +1,4 @@
-# Draft
+# Paphper
 
 Paphper is a PHP static site creator.
 
