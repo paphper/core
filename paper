@@ -2,15 +2,47 @@
 <?php
 
 use Paphper\Config;
+use Paphper\FileContentResolver;
+use Paphper\FileTypeResolvers\HtmlResolver;
+use Paphper\FileTypeResolvers\MdResolver;
+use Paphper\PageResolvers\FilesystemPageResolver;
+use React\EventLoop\Factory;
+use React\Filesystem\Filesystem;
+use Symfony\Component\Console\Application;
+use Paphper\Commands\Watch;
+use Paphper\Commands\Build;
 
 require_once 'vendor/autoload.php';
+
+$loop = Factory::create();
+$filesystem = Filesystem::create($loop);
+
+
+$configData = include getBaseDir() . '/config.php';
+$config = new Config($configData);
+
+
+//resolve the class that creates content from the file
+$fileContentResolver = new FileContentResolver();
+
+//this class resolves the class that can generate content
+//based on the content in the file with extension .html
+$htmlResolver = new HtmlResolver($config, $filesystem);
+$fileContentResolver->add('html', $htmlResolver);
+
+//this class resolves the class that can generate content
+//based on the content in the file with extension .md
+$mdResolver = new MdResolver($config, $filesystem);
+$fileContentResolver->add('.md', $mdResolver);
+
+$pageResolvers = new FilesystemPageResolver($config, $filesystem);
 
 $configData = include getBaseDir() . '/config.php';
 $devConfig  = array_merge($configData, ['is_dev' => true]);
 
-$app = new \Symfony\Component\Console\Application();
+$app = new Application();
 
-$app->add(new \Paphper\Commands\Watch(new Config($devConfig)));
-$app->add(new \Paphper\Commands\Build(new Config($configData)));
+$app->add(new Watch(new Config($devConfig), $pageResolvers, $fileContentResolver, $filesystem, $loop));
+$app->add(new Build(new Config($configData), $pageResolvers, $fileContentResolver, $filesystem, $loop));
 
 $app->run();

@@ -11,13 +11,18 @@ class Str
         $this->string = $string;
     }
 
+    public function __toString()
+    {
+        return $this->string;
+    }
+
     public function endsWith(string $string)
     {
         if (strlen($this) < strlen($string)) {
             return false;
         }
 
-        $position = (int)('-' . strlen($string));
+        $position = (int) ('-'.strlen($string));
 
         return (strlen($this) - strlen($string)) === strpos($this, $string, $position);
     }
@@ -28,7 +33,7 @@ class Str
             return false;
         }
 
-        return strpos($this, $string) === 0;
+        return 0 === strpos($this, $string);
     }
 
     public function replaceAllWith(string $search, string $replace)
@@ -39,7 +44,7 @@ class Str
     public function replaceLastWith(string $search, string $replace)
     {
         $length = strlen($search);
-        $position = (int)('-' . $length);
+        $position = (int) ('-'.$length);
 
         return substr_replace($this, $replace, $position, $length);
     }
@@ -53,7 +58,7 @@ class Str
     {
         $parts = explode($string, $this);
 
-        return count($parts) === 1 ? '' : end($parts);
+        return 1 === count($parts) ? '' : end($parts);
     }
 
     public function getBeforeLast(string $lastString)
@@ -74,12 +79,7 @@ class Str
                 return true;
             }
         }
+
         return false;
     }
-
-    public function __toString()
-    {
-        return $this->string;
-    }
-
 }

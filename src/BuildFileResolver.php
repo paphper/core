@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Paphper;
-
 
 use Paphper\Utils\Str;
 
@@ -18,7 +16,7 @@ class BuildFileResolver
         $this->filename = $filename;
         $folderParser = new FolderParser([$filename]);
         [$rawName] = $folderParser->parse();
-        $this->name = str_replace($this->config->getPageBaseFolder(), $this->config->getBuildBaseFolder(), $rawName) . '/index.html';
+        $this->name = str_replace($this->config->getPageBaseFolder(), $this->config->getBuildBaseFolder(), $rawName).'/index.html';
     }
 
     public function getName(): string

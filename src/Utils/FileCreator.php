@@ -7,7 +7,6 @@ use React\Promise\Deferred;
 
 class FileCreator
 {
-
     private $filesystem;
     private $filename;
     private $directory;
@@ -20,7 +19,28 @@ class FileCreator
         $this->filename = $filename;
         $this->folderName = (new Str($filename))->getBeforeLast('/');
         $this->content = $content;
+    }
 
+    public function writeFile()
+    {
+        $deferred = new Deferred();
+
+        $this->createDirectory()
+            ->then(function () use ($deferred) {
+                $file = $this->filesystem->file($this->filename);
+                $file->exists()
+                    ->then(function () use ($file) {
+                        $file->remove();
+                    }, function () {
+                    })->then(function () use ($file, $deferred) {
+                        $file->putContents($this->content)
+                            ->then(function () use ($deferred) {
+                                $deferred->resolve($this->filename);
+                            });
+                    });
+            });
+
+        return $deferred->promise();
     }
 
     private function createDirectory()
@@ -35,30 +55,6 @@ class FileCreator
                 $this->directory->createRecursive('rwxrwx---')
                     ->then(function () use ($deferred) {
                         $deferred->resolve($this->directory);
-                    });
-            });
-
-        return $deferred->promise();
-    }
-
-    public function writeFile()
-    {
-        $deferred = new Deferred();
-
-        $this->createDirectory()
-            ->then(function () use ($deferred) {
-
-                $file = $this->filesystem->file($this->filename);
-                $file->exists()
-                    ->then(function () use ($file) {
-                        $file->remove();
-                    }, function () {
-
-                    })->then(function () use ($file, $deferred) {
-                        $file->putContents($this->content)
-                            ->then(function () use ($deferred) {
-                                $deferred->resolve($this->filename);
-                            });
                     });
             });
 

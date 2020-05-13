@@ -15,10 +15,9 @@ class Asset extends AbstractResponse
 
     public function __construct(ServerRequestInterface $request, Config $config, FilesystemInterface $filesystem)
     {
-
-        parent::__construct($request, $config, $filesystem,);
+        parent::__construct($request, $config, $filesystem, );
         $path = $this->request->getUri()->getPath();
-        $filename = $this->config->getBuildBaseFolder() . '/' . $path;
+        $filename = $this->config->getBuildBaseFolder().'/'.$path;
         $this->filename = $this->removeMultipleSlashes($filename);
         $this->filesystem = $filesystem;
         $this->fileExtension = (new Str($path))->getAfterLast('.');
@@ -35,15 +34,13 @@ class Asset extends AbstractResponse
                         return new Response(200, array_merge($this->headers, $this->getMimeTypeHeader($this->fileExtension)), $content);
                     });
             }, function () {
-
                 $assetsFolder = $this->config->getAssetsBaseFolder();
-                $assetsImage = $this->removeMultipleSlashes($assetsFolder . '/' . $this->path);
+                $assetsImage = $this->removeMultipleSlashes($assetsFolder.'/'.$this->path);
                 $imageFile = $this->filesystem->file($assetsImage);
 
                 return $imageFile->exists()
                     ->then(function () use ($imageFile) {
-
-                        $buildImagePath = $this->removeMultipleSlashes($this->config->getBuildBaseFolder() . '/' . $this->path);
+                        $buildImagePath = $this->removeMultipleSlashes($this->config->getBuildBaseFolder().'/'.$this->path);
                         $buildImageFolder = (new Str($buildImagePath))->getBeforeLast('/');
                         $directory = $this->filesystem->dir($buildImageFolder);
 
@@ -60,7 +57,6 @@ class Asset extends AbstractResponse
                             ->then(function ($content) {
                                 return new Response(200, array_merge($this->headers, $this->getMimeTypeHeader($this->fileExtension)), $content);
                             });
-
                     }, $this->responseNotFound());
             });
     }

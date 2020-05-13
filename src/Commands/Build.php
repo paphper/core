@@ -1,39 +1,37 @@
 <?php
 
-
 namespace Paphper\Commands;
 
-
-use Paphper\Config;
 use Paphper\SiteGenerator;
-use React\EventLoop\Factory;
-use React\Filesystem\Filesystem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 class Build extends Command
 {
-
     protected static $defaultName = 'build';
     private $config;
+    private $pageResolvers;
+    private $fileContentResolver;
+    private $filesystem;
+    private $loop;
+    private $io;
 
-    public function __construct(Config $config)
+    public function __construct($config, $pageResolvers, $fileContentResolver, $filesystem, $loop)
     {
         parent::__construct();
         $this->config = $config;
+        $this->pageResolvers = $pageResolvers;
+        $this->fileContentResolver = $fileContentResolver;
+        $this->filesystem = $filesystem;
+        $this->loop = $loop;
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $loop = Factory::create();
-        $filesystem = Filesystem::create($loop);
-
         $io = new PaphperStyle($input, $output);
-
-        $siteGenerator = new SiteGenerator($this->config, $filesystem, $loop, $io);
-        $siteGenerator->build();
+        $generator = new SiteGenerator($this->pageResolvers, $this->fileContentResolver, $this->config, $this->filesystem, $this->loop, $io);
+        $generator->build();
 
         return 0;
     }

@@ -3,28 +3,24 @@
 namespace Paphper\Commands;
 
 use Paphper\BuildFileResolver;
-use Paphper\HtmlGenerator;
+use Paphper\Responses\Factory as ResponseFactory;
 use Paphper\SiteGenerator;
 use Paphper\Utils\FileCreator;
-use Paphper\Utils\Str;
 use Paphper\Watcher\FileChange;
 use Psr\Http\Message\ServerRequestInterface;
-use React\EventLoop\Factory;
-use React\Filesystem\Filesystem;
 use React\Http\Server;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Paphper\Config;
 use Symfony\Component\Finder\Finder;
 use Yosymfony\ResourceWatcher\Crc32ContentHash;
-use Yosymfony\ResourceWatcher\ResourceWatcher;
 use Yosymfony\ResourceWatcher\ResourceCachePhpFile;
-use Paphper\Responses\Factory as ResponseFactory;
+use Yosymfony\ResourceWatcher\ResourceWatcher;
 
 class Watch extends Command
 {
+    public static $contentHashMap = [];
     protected static $defaultName = 'dev';
     private $message;
     private $config;
@@ -33,21 +29,24 @@ class Watch extends Command
     private $loop;
     private $watcher;
     private $changedFiles = [];
-    public static $contentHashMap = [];
+    private $fileContentResolver;
+    private $pageResolver;
 
-    public function __construct(Config $config)
+    public function __construct($config, $pageResolver, $fileContentResolver, $filesystem, $loop)
     {
         parent::__construct();
         $this->config = $config;
+        $this->pageResolver = $pageResolver;
+        $this->fileContentResolver = $fileContentResolver;
+        $this->filesystem = $filesystem;
+        $this->loop = $loop;
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $port = $this->config->getPort();
         $this->io = $io = new SymfonyStyle($input, $output);
-        $this->message = new FileChange($io, $this->config);;
-        $this->loop = Factory::create();
-        $this->filesystem = Filesystem::create($this->loop);
+        $this->message = new FileChange($io, $this->config);
 
         $folderWatching = [$this->config->getPageBaseFolder()];
         $this->io->title('Watching for file changes');
@@ -60,43 +59,38 @@ class Watch extends Command
             ->in($folderWatching);
 
         $hashContent = new Crc32ContentHash();
-        $resourceCache = new ResourceCachePhpFile(getBaseDir() . '/path-cache-file.php');
+        $resourceCache = new ResourceCachePhpFile(getBaseDir().'/path-cache-file.php');
         $this->watcher = new ResourceWatcher($resourceCache, $finder, $hashContent);
         $this->watcher->initialize();
 
-        $siteGenerator = new SiteGenerator($this->config, $this->filesystem, $this->loop);
-        $siteGenerator->build();
+        $generator = new SiteGenerator($this->pageResolver, $this->fileContentResolver, $this->config, $this->filesystem, $this->loop);
+        $generator->build();
 
         $this->loop->addPeriodicTimer(1, function () {
             $result = $this->watcher->findChanges();
             $this->changedFiles = $changedFiles = $result->getUpdatedFiles();
-            foreach ($changedFiles as $file) {
-                $generator = new HtmlGenerator($this->config, $this->filesystem, $file);
-                $this->message->notifyFileChange($file);
-                $generator->getHtml()->then(function ($content) use ($file) {
-                    $buildFile = (new BuildFileResolver($this->config, $file))->getName();
-                    $path = str_replace($this->config->getBuildBaseFolder(), '', (new Str($buildFile))->removeLast('/index.html'));
-
-                    unset(self::$contentHashMap[$path]);
-                    $this->message->notifyFileChange($file);
-
-                    (new FileCreator($this->filesystem, $buildFile, $content))->writeFile()
-                        ->then(function () use ($buildFile) {
-                            $this->io->text(sprintf('%s build', $buildFile));
-                        });
-                });
+            foreach ($changedFiles as $filename) {
+                $htmlGenerator = $this->fileContentResolver->resolve($filename);
+                $htmlGenerator->getPageContent()
+                    ->then(function ($content) use ($filename) {
+                        $buildFile = new BuildFileResolver($this->config, $filename);
+                        (new FileCreator($this->filesystem, $buildFile->getName(), $content))->writeFile()
+                            ->then(function () use ($buildFile) {
+                                $this->io->text(sprintf('%s build', $buildFile->getName()));
+                            });
+                    });
             }
         });
 
         $server = new Server(function (ServerRequestInterface $request) use (&$firstBuild) {
+            $response = ResponseFactory::create($request, $this->config, $this->filesystem);
 
-            $response = ResponseFactory::create($request, $this->config, $this->filesystem );
             return $response->toResponse();
         });
 
         $this->openBrowser($port);
 
-        $socket = new \React\Socket\Server('127.0.0.1:' . $port, $this->loop);
+        $socket = new \React\Socket\Server('127.0.0.1:'.$port, $this->loop);
         $server->listen($socket);
 
         $this->loop->run();
@@ -108,14 +102,13 @@ class Watch extends Command
     {
         switch (PHP_OS_FAMILY) {
             case 'Linux':
-                exec('xdg-open http://localhost:' . $port);
+                exec('xdg-open http://localhost:'.$port);
                 break;
             case 'Windows':
-                exec('start http://localhost:' . $port);
+                exec('start http://localhost:'.$port);
                 break;
             default:
-                exec('open http://localhost:' . $port);
+                exec('open http://localhost:'.$port);
         }
-
     }
 }

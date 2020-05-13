@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Paphper\Extractors;
-
 
 use Paphper\Utils\Str;
 use Symfony\Component\DomCrawler\Crawler;
@@ -18,11 +16,11 @@ class AssetExtractor
         ],
         "//*[contains(@style,'background-image')]" => [
             'attribute' => 'style',
-            'pattern' => "[url\((\s)?[?=(',\")]([-\/.\w.]+)[?=(',\")]]"
+            'pattern' => "[url\((\s)?[?=(',\")]([-\/.\w.]+)[?=(',\")]]",
         ],
         '//link' => [
-            'attribute' => 'href'
-        ]
+            'attribute' => 'href',
+        ],
     ];
 
     public function __construct(string $content = null)
@@ -43,6 +41,11 @@ class AssetExtractor
         }
     }
 
+    public function getAssets(): array
+    {
+        return array_unique($this->assets);
+    }
+
     private function addFromPattern($content, $pattern)
     {
         preg_match($pattern, $content, $matches);
@@ -56,11 +59,5 @@ class AssetExtractor
         }
 
         array_push($this->assets, $asset);
-    }
-
-
-    public function getAssets(): array
-    {
-        return array_unique($this->assets);
     }
 }

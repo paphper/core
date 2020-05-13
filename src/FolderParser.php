@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Paphper;
-
 
 use Paphper\Utils\Str;
 
@@ -14,7 +12,6 @@ class FolderParser
         '/index.md',
         '.md',
         '.html',
-
     ];
     private $sortedArr = [];
 
@@ -24,10 +21,16 @@ class FolderParser
         $this->parseFolders();
     }
 
+    public function parse(): array
+    {
+        return array_unique($this->folders);
+    }
+
     private function parseFolders()
     {
         if (empty($this->folders)) {
             $this->sortedArr = [];
+
             return;
         }
 
@@ -41,10 +44,9 @@ class FolderParser
                     return $string->removeLast($replace);
                 }
             }
-            return (string)$string;
 
+            return (string) $string;
         }, $this->folders);
-
 
         foreach ($this->folders as $key => $folder) {
             foreach ($this->folders as $childKey => $childFolder) {
@@ -54,10 +56,5 @@ class FolderParser
                 }
             }
         }
-    }
-
-    public function parse(): array
-    {
-        return array_unique($this->folders);
     }
 }

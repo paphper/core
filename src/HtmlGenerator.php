@@ -2,22 +2,18 @@
 
 namespace Paphper;
 
-use Paphper\Contents\Factory;
 use Paphper\Contents\MetaParser;
-use React\Filesystem\FilesystemInterface;
+use Paphper\Interfaces\ContentInterface;
 use React\Promise\Deferred;
 
 class HtmlGenerator
 {
-
-    private $filesystem;
-    private $filename;
+    private $content;
     private $config;
 
-    public function __construct(Config $config, FilesystemInterface $filesystem, string $filename)
+    public function __construct(Config $config, ContentInterface $content)
     {
-        $this->filesystem = $filesystem;
-        $this->filename = $filename;
+        $this->content = $content;
         $this->config = $config;
     }
 
@@ -25,16 +21,12 @@ class HtmlGenerator
     {
         $deferred = new Deferred();
 
-        $content = Factory::create($this->filesystem, $this->filename);
-
-        $content->getMetaData()
+        $this->content->getMetaData()
             ->then(function (MetaParser $parser) use (&$deferred) {
-
-                $layoutFile = $this->config->getLayoutBaseFolder() .'/'. $parser->getLayout();
-                $this->filesystem->getContents($layoutFile)
+                $this->content->getLayoutContent()
                     ->then(function ($layoutContent) use ($parser, &$deferred) {
                         $pageBuilder = new PageBuilder($parser, $layoutContent);
-                         $deferred->resolve($pageBuilder->toHtml());
+                        $deferred->resolve($pageBuilder->toHtml());
                     });
             });
 

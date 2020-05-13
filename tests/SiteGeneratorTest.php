@@ -2,7 +2,6 @@
 
 namespace Tests;
 
-use Paphper\Config;
 use Paphper\SiteGenerator;
 
 class SiteGeneratorTest extends AbstractTestCase
@@ -21,32 +20,15 @@ class SiteGeneratorTest extends AbstractTestCase
 
     public function testSiteGeneration()
     {
-        $siteGenerator = new SiteGenerator($this->config, $this->filesystem, $this->loop);
-        $siteGenerator->build();
+        $generator = new SiteGenerator($this->pageResolvers, $this->fileContentResolver, $this->config, $this->filesystem, $this->loop);
+        $generator->build();
 
-        $this->assertTrue(file_exists($this->baseDir . '/Mocks/build/non-html/index.html'));
-        $this->assertTrue(file_exists($this->baseDir . '/Mocks/build/index.html'));
-        $this->assertTrue(file_exists($this->baseDir . '/Mocks/build/blogs/index.html'));
-        $this->assertTrue(file_exists($this->baseDir . '/Mocks/build/blogs/2020/index.html'));
-        $this->assertTrue(file_exists($this->baseDir . '/Mocks/build/images/img3.jpg'));
-        $this->assertTrue(file_exists($this->baseDir . '/Mocks/build/img1.jpg'));
-        $this->assertTrue(file_exists($this->baseDir . '/Mocks/build/css/style.css'));
-    }
-
-    public function testImageGenerationIsStoppedIfTheAssetsFolderIsNotDefined()
-    {
-        $config = new Config([
-            'pages_dir' => getBaseDir() . '/Mocks/pages',
-            'layout_dir' => getBaseDir() . '/Mocks/layouts',
-            'build_dir' => getBaseDir() . '/Mocks/build'
-        ]);
-
-        $siteGenerator = new SiteGenerator($config, $this->filesystem, $this->loop);
-        $siteGenerator->build();
-        $this->assertTrue(file_exists($this->baseDir . '/Mocks/build/non-html/index.html'));
-        $this->assertTrue(file_exists($this->baseDir . '/Mocks/build/index.html'));
-        $this->assertTrue(file_exists($this->baseDir . '/Mocks/build/blogs/index.html'));
-        $this->assertTrue(file_exists($this->baseDir . '/Mocks/build/blogs/2020/index.html'));
-        $this->assertTrue(!file_exists($this->baseDir . '/Mocks/build/img1.jpg'));
+        $this->assertTrue(file_exists($this->baseDir.'/Mocks/build/non-html/index.html'));
+        $this->assertTrue(file_exists($this->baseDir.'/Mocks/build/index.html'));
+        $this->assertTrue(file_exists($this->baseDir.'/Mocks/build/blogs/index.html'));
+        $this->assertTrue(file_exists($this->baseDir.'/Mocks/build/blogs/2020/index.html'));
+        $this->assertTrue(file_exists($this->baseDir.'/Mocks/build/images/img3.jpg'));
+        $this->assertTrue(file_exists($this->baseDir.'/Mocks/build/img1.jpg'));
+        $this->assertTrue(file_exists($this->baseDir.'/Mocks/build/css/style.css'));
     }
 }
