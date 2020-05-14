@@ -1,6 +1,8 @@
-# Paphper
 
-Paphper is a PHP static site creator.
+# Paphper
+=======
+
+Paphper is a static site generator written on top of ReactPHP.
 
 ## Installation
 

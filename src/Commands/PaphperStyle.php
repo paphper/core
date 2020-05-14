@@ -1,14 +1,11 @@
 <?php
 
-
 namespace Paphper\Commands;
-
 
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class PaphperStyle extends SymfonyStyle
 {
-
     /**
      * {@inheritdoc}
      */

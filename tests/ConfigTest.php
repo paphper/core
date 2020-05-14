@@ -7,7 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class ConfigTest extends TestCase
 {
-
     public function testConfigWorks()
     {
         $pageDir = '/Mocks/pages/';
@@ -16,7 +15,7 @@ class ConfigTest extends TestCase
 
         $config = new Config([
             'pages_dir' => $pageDir,
-            'layout_dir' =>  $layoutDir,
+            'layout_dir' => $layoutDir,
             'build_dir' => $buildDir,
         ]);
 

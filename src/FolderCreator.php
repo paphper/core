@@ -3,12 +3,8 @@
 namespace Paphper;
 
 use React\Filesystem\FilesystemInterface;
-use React\Filesystem\Node\Directory;
 use React\Filesystem\Node\File;
-use React\Promise\FulfilledPromise;
 use React\Promise\PromiseInterface;
-use function Clue\React\Block\await;
-use function foo\func;
 
 class FolderCreator
 {
@@ -30,13 +26,12 @@ class FolderCreator
                 $allFolders = [];
                 foreach ($lists as $item) {
                     if ($item instanceof File) {
-                        $allFolders[] = (new BuildFileResolver($this->config, (string)$item))->getFolder();
+                        $allFolders[] = (new BuildFileResolver($this->config, (string) $item))->getFolder();
                     }
                 }
                 $folderParser = new FolderParser($allFolders);
+
                 return $folderParser->parse();
             });
     }
-
-
 }

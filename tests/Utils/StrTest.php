@@ -17,7 +17,6 @@ class StrTest extends TestCase
         $this->assertTrue($string->endsWith('r'));
         $this->assertFalse($string->endsWith('arend'));
 
-
         $newString = new Str('n');
         $newString->startsWith('na');
         $newString->endsWith('na');
@@ -62,6 +61,4 @@ class StrTest extends TestCase
         $this->assertSame('html', $string->getAfterLast('.'));
         $this->assertSame('', $string->getAfterLast('dhirendra'));
     }
-
-
 }

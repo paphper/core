@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Paphper\Responses;
 
 use Paphper\Config;
@@ -8,7 +7,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use React\Filesystem\FilesystemInterface;
 use React\Http\Response;
 use React\Promise\PromiseInterface;
-use RingCentral\Psr7\Request;
 
 abstract class AbstractResponse
 {
@@ -32,7 +30,7 @@ abstract class AbstractResponse
         $this->request = $request;
     }
 
-    public abstract function toResponse(): PromiseInterface;
+    abstract public function toResponse(): PromiseInterface;
 
     public function responseNotFound()
     {
@@ -44,10 +42,11 @@ abstract class AbstractResponse
     protected function removeMultipleSlashes(string $string)
     {
         $string = str_replace('///', '/', $string);
+
         return str_replace('//', '/', $string);
     }
 
-    protected final function getMimeTypeHeader(string $imageType): array
+    final protected function getMimeTypeHeader(string $imageType): array
     {
         $imageMimeTypes = [
             'png' => ['Content-Type' => 'image/png'],

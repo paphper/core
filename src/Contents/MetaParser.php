@@ -2,7 +2,9 @@
 
 namespace Paphper\Contents;
 
-class MetaParser
+use Paphper\Interfaces\MetaInterface;
+
+class MetaParser implements MetaInterface
 {
     private $finalCollection = [];
     private $body;
@@ -27,7 +29,7 @@ class MetaParser
         return $this->get('layout');
     }
 
-    public function get($key): ?string
+    public function get(string $key): ?string
     {
         return $this->finalCollection[$key] ?? null;
     }
@@ -36,7 +38,7 @@ class MetaParser
     {
         $extraMetas = $this->finalCollection;
         unset($extraMetas['layout']);
+
         return  $this->finalCollection;
     }
-
 }

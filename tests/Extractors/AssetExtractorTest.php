@@ -2,15 +2,15 @@
 
 namespace Tests\Extractors;
 
+use function Clue\React\Block\await;
 use Paphper\Extractors\AssetExtractor;
 use Tests\AbstractTestCase;
-use function Clue\React\Block\await;
 
 class AssetExtractorTest extends AbstractTestCase
 {
     public function testAssetsAreCorrectlyExtractedFromImgTags()
     {
-        $test = $this->filesystem->file($this->baseDir . '/Mocks/html-with-images.html')
+        $test = $this->filesystem->file($this->baseDir.'/Mocks/html-with-images.html')
             ->getContents()
             ->then(function ($content) {
                 $assetExtractor = new AssetExtractor($content);
@@ -24,7 +24,7 @@ class AssetExtractorTest extends AbstractTestCase
 
     public function testOnlyUniqueAssetsAreFetched()
     {
-        $test = $this->filesystem->file($this->baseDir . '/Mocks/html-with-images.html')
+        $test = $this->filesystem->file($this->baseDir.'/Mocks/html-with-images.html')
             ->getContents()
             ->then(function ($content) {
                 $assetExtractor = new AssetExtractor($content);
@@ -36,14 +36,13 @@ class AssetExtractorTest extends AbstractTestCase
 
     public function testBackgroundAssetsAreFetched()
     {
-        $test = $this->filesystem->file($this->baseDir . '/Mocks/html-with-images.html')
+        $test = $this->filesystem->file($this->baseDir.'/Mocks/html-with-images.html')
             ->getContents()
             ->then(function ($content) {
                 $assetExtractor = new AssetExtractor($content);
                 $this->assertContains('narendra.bmp', $assetExtractor->getAssets());
                 $this->assertContains('saru.png', $assetExtractor->getAssets());
                 $this->assertContains('images/hel-lo/saru.png', $assetExtractor->getAssets());
-
             });
 
         await($test, $this->loop);
@@ -51,13 +50,12 @@ class AssetExtractorTest extends AbstractTestCase
 
     public function testCssLinksAreFetched()
     {
-        $test = $this->filesystem->file($this->baseDir . '/Mocks/html-with-images.html')
+        $test = $this->filesystem->file($this->baseDir.'/Mocks/html-with-images.html')
             ->getContents()
             ->then(function ($content) {
                 $assetExtractor = new AssetExtractor($content);
                 $this->assertContains('/style.css', $assetExtractor->getAssets());
                 $this->assertContains('/base/styles/big.style.css', $assetExtractor->getAssets());
-
             });
 
         await($test, $this->loop);
@@ -65,7 +63,7 @@ class AssetExtractorTest extends AbstractTestCase
 
     public function testExternalLinksAreIgnored()
     {
-        $test = $this->filesystem->file($this->baseDir . '/Mocks/html-with-images.html')
+        $test = $this->filesystem->file($this->baseDir.'/Mocks/html-with-images.html')
             ->getContents()
             ->then(function ($content) {
                 $assetExtractor = new AssetExtractor($content);
@@ -75,13 +73,8 @@ class AssetExtractorTest extends AbstractTestCase
                 $this->assertNotContains('https://unpkg.com/logo.png', $assetExtractor->getAssets());
                 $this->assertNotContains('https://unpkg.com/img-logo.png', $assetExtractor->getAssets());
                 $this->assertNotContains('https://unpkg.com/logo.png', $assetExtractor->getAssets());
-
             });
 
         await($test, $this->loop);
     }
-
-
-
-
 }
