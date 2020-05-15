@@ -19,7 +19,7 @@ class Factory
 
     public static function create(ServerRequestInterface $request, Config $config, FilesystemInterface $filesystem)
     {
-        if (self::isImage($request->getUri()) || self::isCss($request->getUri())) {
+        if (self::isImage($request->getUri()->getPath()) || self::isCss($request->getUri()->getPath())) {
             return new Asset($request, $config, $filesystem);
         }
 

@@ -38,11 +38,6 @@ class Config
         return $this->options['assets_dir'];
     }
 
-    public function isDevelopmentMode()
-    {
-        return $this->options['is_dev'];
-    }
-
     public function getPort()
     {
         return $this->options['port'];
