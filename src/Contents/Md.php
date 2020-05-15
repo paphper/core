@@ -4,21 +4,39 @@ namespace Paphper\Contents;
 
 use League\CommonMark\GithubFlavoredMarkdownConverter;
 use Paphper\Interfaces\ContentInterface;
+use Paphper\Interfaces\MetaInterface;
+use Paphper\PageBuilder;
+use React\Promise\Deferred;
 use React\Promise\PromiseInterface;
 
-class Md extends AbstractContentFile implements ContentInterface
+class Md implements ContentInterface
 {
-    public function getMetaData(): PromiseInterface
-    {
-        return $this->getContent()
-            ->then(function ($content) {
-                $body = $this->getBody($content);
-                $converter = new GithubFlavoredMarkdownConverter([
-                    'html_input' => 'strip',
-                    'allow_unsafe_links' => false,
-                ]);
+    protected $file;
+    protected $meta;
 
-                return new MetaParser($this->getMeta($content), $converter->convertToHtml($body));
+    public function __construct(MetaInterface $meta)
+    {
+        $this->meta = $meta;
+    }
+
+    public function getPageContent(): PromiseInterface
+    {
+        $deferred = new Deferred();
+
+        $this->meta->process()
+            ->then(function (MetaInterface $meta) use (&$deferred) {
+                $meta->getLayoutContent()
+                    ->then(function ($layoutContent) use (&$deferred, $meta) {
+                        $converter = new GithubFlavoredMarkdownConverter([
+                            'html_input' => 'strip',
+                            'allow_unsafe_links' => false,
+                        ]);
+
+                        $pageBuilder = new PageBuilder($meta, $layoutContent, $converter->convertToHtml($meta->getBody()));
+                        $deferred->resolve($pageBuilder->toHtml());
+                    });
             });
+
+        return $deferred->promise();
     }
 }

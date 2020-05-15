@@ -4,6 +4,7 @@ namespace Paphper\Utils;
 
 use React\Filesystem\FilesystemInterface;
 use React\Promise\Deferred;
+use React\Promise\PromiseInterface;
 
 class FileCreator
 {
@@ -21,7 +22,7 @@ class FileCreator
         $this->content = $content;
     }
 
-    public function writeFile()
+    public function writeFile(): PromiseInterface
     {
         $deferred = new Deferred();
 
@@ -43,7 +44,7 @@ class FileCreator
         return $deferred->promise();
     }
 
-    private function createDirectory()
+    private function createDirectory(): PromiseInterface
     {
         $deferred = new Deferred();
 

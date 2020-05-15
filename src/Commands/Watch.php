@@ -6,7 +6,6 @@ use Paphper\BuildFileResolver;
 use Paphper\Responses\Factory as ResponseFactory;
 use Paphper\SiteGenerator;
 use Paphper\Utils\FileCreator;
-use Paphper\Watcher\FileChange;
 use Psr\Http\Message\ServerRequestInterface;
 use React\Http\Server;
 use Symfony\Component\Console\Command\Command;
@@ -22,7 +21,6 @@ class Watch extends Command
 {
     public static $contentHashMap = [];
     protected static $defaultName = 'dev';
-    private $message;
     private $config;
     private $filesystem;
     private $io;
@@ -46,7 +44,6 @@ class Watch extends Command
     {
         $port = $this->config->getPort();
         $this->io = $io = new SymfonyStyle($input, $output);
-        $this->message = new FileChange($io, $this->config);
 
         $folderWatching = [$this->config->getPageBaseFolder()];
         $this->io->title('Watching for file changes');

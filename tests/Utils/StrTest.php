@@ -61,4 +61,11 @@ class StrTest extends TestCase
         $this->assertSame('html', $string->getAfterLast('.'));
         $this->assertSame('', $string->getAfterLast('dhirendra'));
     }
+
+    public function testEndsWithAny()
+    {
+        $string = new Str('naren.html');
+        $this->assertTrue($string->endsWithAny(['html', 'md']));
+        $this->assertFalse($string->endsWithAny(['naren']));
+    }
 }

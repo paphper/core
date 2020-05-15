@@ -4,6 +4,7 @@ namespace Paphper\FileTypeResolvers;
 
 use Paphper\Config;
 use Paphper\Contents\Md;
+use Paphper\Contents\MetaParser;
 use Paphper\Interfaces\ContentInterface;
 use Paphper\Interfaces\ContentResolverInterface;
 use React\Filesystem\FilesystemInterface;
@@ -21,6 +22,8 @@ class MdResolver implements ContentResolverInterface
 
     public function resolveFileType(string $filename): ContentInterface
     {
-        return new Md($this->config, $this->filesystem, $filename);
+        $meta = new MetaParser($this->config, $this->filesystem, $filename);
+
+        return new Md($meta);
     }
 }

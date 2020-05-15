@@ -12,16 +12,19 @@ class ConfigTest extends TestCase
         $pageDir = '/Mocks/pages/';
         $layoutDir = '/Mocks/layouts/';
         $buildDir = '/Mocks/build/';
+        $port = 3000;
 
         $config = new Config([
             'pages_dir' => $pageDir,
             'layout_dir' => $layoutDir,
             'build_dir' => $buildDir,
+            'port' => $port,
         ]);
 
         $this->assertSame($pageDir, $config->getPageBaseFolder());
         $this->assertSame($layoutDir, $config->getLayoutBaseFolder());
         $this->assertSame($buildDir, $config->getBuildBaseFolder());
+        $this->assertSame($port, $config->getPort());
     }
 
     public function testDefaultOptionsWork()
