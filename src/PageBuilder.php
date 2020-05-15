@@ -2,7 +2,7 @@
 
 namespace Paphper;
 
-use Paphper\Interfaces\MetaInterface;
+use Paphper\Contracts\MetaInterface;
 
 class PageBuilder
 {
