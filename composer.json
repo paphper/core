@@ -20,6 +20,9 @@
         "yosymfony/resource-watcher": "^2.0",
         "symfony/dom-crawler": "^5.0"
     },
+    "replace": {
+        "paphper/contracts":  "self.version"
+    },
     "autoload": {
         "psr-4": {
             "Tests\\": "tests/",

@@ -4,7 +4,7 @@ namespace Paphper\PageResolvers;
 
 use Paphper\BuildFileResolver;
 use Paphper\Config;
-use Paphper\Interfaces\PageResolverInterface;
+use Paphper\Contracts\PageResolverInterface;
 use React\Filesystem\FilesystemInterface;
 use React\Filesystem\Node\File;
 use React\Promise\PromiseInterface;

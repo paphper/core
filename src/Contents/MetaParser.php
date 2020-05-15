@@ -3,7 +3,7 @@
 namespace Paphper\Contents;
 
 use Paphper\Config;
-use Paphper\Interfaces\MetaInterface;
+use Paphper\Contracts\MetaInterface;
 use React\Filesystem\FilesystemInterface;
 use React\Promise\PromiseInterface;
 

@@ -1,3 +1,3 @@
 ## Paphper
 
-Interfaces for Paphper as a subtree split
+Contracts for Paphper as a subtree split

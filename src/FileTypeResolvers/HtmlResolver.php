@@ -5,8 +5,8 @@ namespace Paphper\FileTypeResolvers;
 use Paphper\Config;
 use Paphper\Contents\Html;
 use Paphper\Contents\MetaParser;
-use Paphper\Interfaces\ContentInterface;
-use Paphper\Interfaces\ContentResolverInterface;
+use Paphper\Contracts\ContentInterface;
+use Paphper\Contracts\ContentResolverInterface;
 use React\Filesystem\FilesystemInterface;
 
 class HtmlResolver implements ContentResolverInterface

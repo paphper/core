@@ -3,8 +3,8 @@
 namespace Paphper\Contents;
 
 use League\CommonMark\GithubFlavoredMarkdownConverter;
-use Paphper\Interfaces\ContentInterface;
-use Paphper\Interfaces\MetaInterface;
+use Paphper\Contracts\ContentInterface;
+use Paphper\Contracts\MetaInterface;
 use Paphper\PageBuilder;
 use React\Promise\Deferred;
 use React\Promise\PromiseInterface;
