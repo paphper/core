@@ -3,8 +3,8 @@
 namespace Paphper;
 
 use Paphper\Exceptions\ContentResolverException;
-use Paphper\Contracts\ContentInterface;
-use Paphper\Contracts\ContentResolverInterface;
+use Paphper\Interfaces\ContentInterface;
+use Paphper\Interfaces\ContentResolverInterface;
 use Paphper\Utils\Str;
 
 class FileContentResolver

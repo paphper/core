@@ -2,8 +2,8 @@
 
 namespace Paphper\Contents;
 
-use Paphper\Contracts\ContentInterface;
-use Paphper\Contracts\MetaInterface;
+use Paphper\Interfaces\ContentInterface;
+use Paphper\Interfaces\MetaInterface;
 use Paphper\PageBuilder;
 use React\Promise\Deferred;
 use React\Promise\PromiseInterface;

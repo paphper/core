@@ -5,8 +5,8 @@ namespace Paphper\FileTypeResolvers;
 use Paphper\Config;
 use Paphper\Contents\Md;
 use Paphper\Contents\MetaParser;
-use Paphper\Contracts\ContentInterface;
-use Paphper\Contracts\ContentResolverInterface;
+use Paphper\Interfaces\ContentInterface;
+use Paphper\Interfaces\ContentResolverInterface;
 use React\Filesystem\FilesystemInterface;
 
 class MdResolver implements ContentResolverInterface
