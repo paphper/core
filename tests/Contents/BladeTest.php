@@ -17,6 +17,7 @@ class BladeTest extends AbstractTestCase
 
         $content = await($blade->getPageContent(), $this->loop);
 
+//        var_dump($content);
         $this->assertSame($this->getBladeContent(), $content);
     }
 
@@ -26,7 +27,7 @@ class BladeTest extends AbstractTestCase
 '<html>
 
 <head>
-    <title>this is a test</title>
+    <title>This is a test</title>
 </head>
 
 <body>
@@ -35,7 +36,6 @@ hello world
 
     this is a different test
 </body>
-</html>
-';
+</html>';
     }
 }

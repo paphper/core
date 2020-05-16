@@ -4,6 +4,9 @@ namespace Paphper\Contents;
 
 use Paphper\Config;
 use Paphper\Contracts\ContentInterface;
+use Paphper\Contracts\MetaInterface;
+use Paphper\PageBuilder;
+use Paphper\Parsers\PaperTagContentParser;
 use Paphper\Utils\Str;
 use React\Filesystem\FilesystemInterface;
 use React\Promise\Deferred;
@@ -30,9 +33,16 @@ class Blade implements ContentInterface
         $filename = (new Str($filename))->replaceAllWith($this->config->getPageBaseFolder(), '');
 
         $content = $this->blade->render('pages'.$filename);
-        $defered = new Deferred();
-        $defered->resolve($content);
 
-        return $defered->promise();
+        $meta = new PaperTagContentParser($this->config, $this->filesystem, $content);
+        return $meta->process()
+            ->then(function (MetaInterface $meta) use($content){
+                $content = trim($meta->getBody());
+                foreach ($meta->getExtraMetas() as $key => $meta) {
+                    $key = '{'.$key.'}';
+                    $content = str_replace($key, $meta, $content);
+                }
+                return  $content;
+            });
     }
 }

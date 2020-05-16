@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title>this is a test</title>
+    <title>{title}</title>
 </head>
 
 <body>

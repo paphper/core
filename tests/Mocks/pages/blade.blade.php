@@ -1,3 +1,7 @@
+<paper>
+    title: This is a test
+</paper>
+
 @extends('layouts.naren')
 @section('content')
 
