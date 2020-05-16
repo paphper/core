@@ -1,3 +1,4 @@
 vendor
 tests/Mocks/build
+tests/Mocks/cache
 coverage

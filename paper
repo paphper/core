@@ -28,12 +28,17 @@ $fileContentResolver = new FileContentResolver();
 //this class resolves the class that can generate content
 //based on the content in the file with extension .html
 $htmlResolver = new HtmlResolver($config, $filesystem);
-$fileContentResolver->add('html', $htmlResolver);
+$fileContentResolver->add('.html', $htmlResolver);
 
 //this class resolves the class that can generate content
 //based on the content in the file with extension .md
 $mdResolver = new MdResolver($config, $filesystem);
 $fileContentResolver->add('.md', $mdResolver);
+
+//this class resolves the class that can generate content
+//based on the content in the file with extension .blade.php
+$bladeResolver = new \Paphper\FileTypeResolvers\BladeResolver($config, $filesystem);
+$fileContentResolver->add('.blade.php', $bladeResolver);
 
 $pageResolvers = new FilesystemPageResolver($config, $filesystem);
 

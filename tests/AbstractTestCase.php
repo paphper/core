@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Paphper\FileTypeResolvers\BladeResolver;
 use function Clue\React\Block\await;
 use Paphper\Config;
 use Paphper\FileContentResolver;
@@ -30,10 +31,12 @@ class AbstractTestCase extends TestCase
         $this->config = new Config($configData);
         $htmlResolver = new HtmlResolver($this->config, $this->filesystem);
         $mdResolver = new MdResolver($this->config, $this->filesystem);
+        $bladeResolver = new BladeResolver($this->config, $this->filesystem);
 
         $this->fileContentResolver = new FileContentResolver();
         $this->fileContentResolver->add('html', $htmlResolver);
         $this->fileContentResolver->add('.md', $mdResolver);
+        $this->fileContentResolver->add('.blade.php', $bladeResolver);
         $this->pageResolvers = new FilesystemPageResolver($this->config, $this->filesystem);
     }
 

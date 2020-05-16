@@ -26,6 +26,6 @@ class FileContentResolver
             }
         }
 
-        throw new ContentResolverException((new Str($filename))->getAfterLast('/').'file does not have a content resolver.');
+        throw new ContentResolverException((new Str($filename))->getAfterLast('/').' file does not have a content resolver.');
     }
 }
