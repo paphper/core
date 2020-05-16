@@ -1,22 +1,19 @@
 <?php
 
-
 namespace Tests\Contents;
 
-
+use function Clue\React\Block\await;
 use Paphper\Contents\Blade;
 use Paphper\Utils\Str;
 use Tests\AbstractTestCase;
-use function Clue\React\Block\await;
 
 class BladeTest extends AbstractTestCase
 {
-
     public function testThisWorks()
     {
         $baseFolder = $this->config->getPageBaseFolder();
-        $lBlade= new \Jenssegers\Blade\Blade( (new Str($baseFolder))->getBeforeLast('/'), $this->config->getCacheDir());
-        $blade = new Blade($this->config, $lBlade, $this->filesystem, $this->config->getPageBaseFolder() . '/blade.blade.php');
+        $lBlade = new \Jenssegers\Blade\Blade((new Str($baseFolder))->getBeforeLast('/'), $this->config->getCacheDir());
+        $blade = new Blade($this->config, $lBlade, $this->filesystem, $this->config->getPageBaseFolder().'/blade.blade.php');
 
         $content = await($blade->getPageContent(), $this->loop);
 

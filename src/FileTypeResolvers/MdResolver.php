@@ -4,9 +4,9 @@ namespace Paphper\FileTypeResolvers;
 
 use Paphper\Config;
 use Paphper\Contents\Md;
-use Paphper\Parsers\PaperTagParser;
 use Paphper\Contracts\ContentInterface;
 use Paphper\Contracts\ContentResolverInterface;
+use Paphper\Parsers\PaperTagParser;
 use React\Filesystem\FilesystemInterface;
 
 class MdResolver implements ContentResolverInterface

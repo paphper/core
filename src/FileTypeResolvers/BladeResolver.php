@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Paphper\FileTypeResolvers;
 
 use Paphper\Config;
@@ -22,12 +21,11 @@ class BladeResolver implements ContentResolverInterface
         $this->filesystem = $filesystem;
         $baseFolder = $this->config->getPageBaseFolder();
 
-        $this->blade = new \Jenssegers\Blade\Blade( (new Str($baseFolder))->getBeforeLast('/'), $this->config->getCacheDir());
+        $this->blade = new \Jenssegers\Blade\Blade((new Str($baseFolder))->getBeforeLast('/'), $this->config->getCacheDir());
     }
 
     public function resolveFileType(string $filename): ContentInterface
     {
-       return new Blade($this->config, $this->blade, $this->filesystem, $filename);
+        return new Blade($this->config, $this->blade, $this->filesystem, $filename);
     }
-
 }

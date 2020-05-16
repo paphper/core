@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Paphper\Parsers;
-
 
 use Paphper\Config;
 use React\Filesystem\FilesystemInterface;

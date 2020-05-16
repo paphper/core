@@ -3,8 +3,8 @@
 namespace Paphper;
 
 use function Clue\React\Block\await;
-use Paphper\Extractors\AssetExtractor;
 use Paphper\Contracts\PageResolverInterface;
+use Paphper\Extractors\AssetExtractor;
 use Paphper\Utils\Str;
 use React\EventLoop\LoopInterface;
 use React\Filesystem\FilesystemInterface;

@@ -2,10 +2,10 @@
 
 namespace Tests;
 
-use Paphper\FileTypeResolvers\BladeResolver;
 use function Clue\React\Block\await;
 use Paphper\Config;
 use Paphper\FileContentResolver;
+use Paphper\FileTypeResolvers\BladeResolver;
 use Paphper\FileTypeResolvers\HtmlResolver;
 use Paphper\FileTypeResolvers\MdResolver;
 use Paphper\PageResolvers\FilesystemPageResolver;

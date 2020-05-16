@@ -2,9 +2,9 @@
 
 namespace Paphper;
 
-use Paphper\Exceptions\ContentResolverException;
 use Paphper\Contracts\ContentInterface;
 use Paphper\Contracts\ContentResolverInterface;
+use Paphper\Exceptions\ContentResolverException;
 use Paphper\Utils\Str;
 
 class FileContentResolver
