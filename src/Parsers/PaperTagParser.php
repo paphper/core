@@ -7,7 +7,7 @@ use Paphper\Contracts\MetaInterface;
 use React\Filesystem\FilesystemInterface;
 use React\Promise\PromiseInterface;
 
-class MetaParser implements MetaInterface
+class PaperTagParser implements MetaInterface
 {
     private $finalCollection = [];
     private $body;

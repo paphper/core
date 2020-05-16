@@ -4,14 +4,14 @@ namespace Tests\Contents;
 
 use function Clue\React\Block\await;
 use Paphper\Contents\Html;
-use Paphper\Parsers\MetaParser;
+use Paphper\Parsers\PaperTagParser;
 use Tests\AbstractTestCase;
 
 class HtmlTest extends AbstractTestCase
 {
     public function testHtmlContentIsSuccessfullyGenerated()
     {
-        $meta = new MetaParser($this->config, $this->filesystem, $this->config->getPageBaseFolder().'/index.html');
+        $meta = new PaperTagParser($this->config, $this->filesystem, $this->config->getPageBaseFolder().'/index.html');
         $html = new Html($meta);
         $promise = $html->getPageContent()->then(function ($pageContent) {
             $this->assertSame($this->getTestPageContent(), $pageContent);

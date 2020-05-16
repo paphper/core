@@ -3,15 +3,15 @@
 namespace Tests\Contents;
 
 use function Clue\React\Block\await;
-use Paphper\Parsers\MetaParser;
+use Paphper\Parsers\PaperTagParser;
 use React\Promise\PromiseInterface;
 use Tests\AbstractTestCase;
 
-class MetaParserTest extends AbstractTestCase
+class PaperTagParserTest extends AbstractTestCase
 {
     public function testMetaParserWorks()
     {
-        $meta = new MetaParser($this->config, $this->filesystem, $this->config->getPageBaseFolder().'/index.html');
+        $meta = new PaperTagParser($this->config, $this->filesystem, $this->config->getPageBaseFolder().'/index.html');
 
         $promise = $meta->process()->then(function () use ($meta) {
             $this->assertSame('index.html', $meta->getLayout());

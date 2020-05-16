@@ -4,7 +4,7 @@ namespace Paphper\FileTypeResolvers;
 
 use Paphper\Config;
 use Paphper\Contents\Html;
-use Paphper\Parsers\MetaParser;
+use Paphper\Parsers\PaperTagParser;
 use Paphper\Contracts\ContentInterface;
 use Paphper\Contracts\ContentResolverInterface;
 use React\Filesystem\FilesystemInterface;
@@ -22,7 +22,7 @@ class HtmlResolver implements ContentResolverInterface
 
     public function resolveFileType(string $filename): ContentInterface
     {
-        $meta = new MetaParser($this->config, $this->filesystem, $filename);
+        $meta = new PaperTagParser($this->config, $this->filesystem, $filename);
 
         return new Html($meta);
     }
