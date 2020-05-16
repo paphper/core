@@ -5,4 +5,5 @@ return [
     'layout_dir' => getBaseDir().'/Mocks/layouts',
     'build_dir' => getBaseDir().'/Mocks/build',
     'assets_dir' => getBaseDir().'/Mocks/assets',
+    'cache_dir' => getBaseDir().'/Mocks/cache',
 ];

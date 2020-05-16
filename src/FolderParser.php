@@ -12,6 +12,8 @@ class FolderParser
         '/index.md',
         '.md',
         '.html',
+        '.blade.php',
+        '/index.blade.php',
     ];
     private $sortedArr = [];
 

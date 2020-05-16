@@ -11,6 +11,7 @@ class Config
         'assets_dir' => '',
         'is_dev' => false,
         'port' => '8888',
+        'cache_dir' => '',
     ];
 
     public function __construct(array $options = [])
@@ -41,5 +42,10 @@ class Config
     public function getPort()
     {
         return $this->options['port'];
+    }
+
+    public function getCacheDir()
+    {
+        return $this->options['cache_dir'];
     }
 }

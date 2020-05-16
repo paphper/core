@@ -2,9 +2,9 @@
 
 namespace Paphper;
 
-use Paphper\Exceptions\ContentResolverException;
 use Paphper\Contracts\ContentInterface;
 use Paphper\Contracts\ContentResolverInterface;
+use Paphper\Exceptions\ContentResolverException;
 use Paphper\Utils\Str;
 
 class FileContentResolver
@@ -26,6 +26,6 @@ class FileContentResolver
             }
         }
 
-        throw new ContentResolverException((new Str($filename))->getAfterLast('/').'file does not have a content resolver.');
+        throw new ContentResolverException((new Str($filename))->getAfterLast('/').' file does not have a content resolver.');
     }
 }

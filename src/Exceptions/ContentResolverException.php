@@ -2,7 +2,7 @@
 
 namespace Paphper\Exceptions;
 
-use \Exception;
+use Exception;
 
 class ContentResolverException extends Exception
 {

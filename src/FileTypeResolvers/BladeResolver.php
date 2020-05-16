@@ -3,27 +3,29 @@
 namespace Paphper\FileTypeResolvers;
 
 use Paphper\Config;
-use Paphper\Contents\Md;
+use Paphper\Contents\Blade;
 use Paphper\Contracts\ContentInterface;
 use Paphper\Contracts\ContentResolverInterface;
-use Paphper\Parsers\PaperTagParser;
+use Paphper\Utils\Str;
 use React\Filesystem\FilesystemInterface;
 
-class MdResolver implements ContentResolverInterface
+class BladeResolver implements ContentResolverInterface
 {
     private $config;
+    private $blade;
     private $filesystem;
 
     public function __construct(Config $config, FilesystemInterface $filesystem)
     {
         $this->config = $config;
         $this->filesystem = $filesystem;
+        $baseFolder = $this->config->getPageBaseFolder();
+
+        $this->blade = new \Jenssegers\Blade\Blade((new Str($baseFolder))->getBeforeLast('/'), $this->config->getCacheDir());
     }
 
     public function resolveFileType(string $filename): ContentInterface
     {
-        $meta = new PaperTagParser($this->config, $this->filesystem, $filename);
-
-        return new Md($meta);
+        return new Blade($this->config, $this->blade, $this->filesystem, $filename);
     }
 }

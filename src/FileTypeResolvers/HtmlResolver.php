@@ -4,9 +4,9 @@ namespace Paphper\FileTypeResolvers;
 
 use Paphper\Config;
 use Paphper\Contents\Html;
-use Paphper\Parsers\PaperTagParser;
 use Paphper\Contracts\ContentInterface;
 use Paphper\Contracts\ContentResolverInterface;
+use Paphper\Parsers\PaperTagParser;
 use React\Filesystem\FilesystemInterface;
 
 class HtmlResolver implements ContentResolverInterface
