@@ -4,7 +4,7 @@ namespace Paphper\FileTypeResolvers;
 
 use Paphper\Config;
 use Paphper\Contents\Html;
-use Paphper\Contents\MetaParser;
+use Paphper\Parsers\MetaParser;
 use Paphper\Contracts\ContentInterface;
 use Paphper\Contracts\ContentResolverInterface;
 use React\Filesystem\FilesystemInterface;

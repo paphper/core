@@ -1,6 +1,6 @@
 <?php
 
-namespace Paphper\Contents;
+namespace Paphper\Parsers;
 
 use Paphper\Config;
 use Paphper\Contracts\MetaInterface;

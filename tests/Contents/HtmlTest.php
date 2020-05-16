@@ -4,7 +4,7 @@ namespace Tests\Contents;
 
 use function Clue\React\Block\await;
 use Paphper\Contents\Html;
-use Paphper\Contents\MetaParser;
+use Paphper\Parsers\MetaParser;
 use Tests\AbstractTestCase;
 
 class HtmlTest extends AbstractTestCase

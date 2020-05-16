@@ -3,7 +3,7 @@
 namespace Tests\Contents;
 
 use function Clue\React\Block\await;
-use Paphper\Contents\MetaParser;
+use Paphper\Parsers\MetaParser;
 use React\Promise\PromiseInterface;
 use Tests\AbstractTestCase;
 
