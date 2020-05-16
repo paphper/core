@@ -51,8 +51,7 @@ class Watch extends Command
 
         $finder = new Finder();
         $finder->files()
-            ->name('*.html')
-            ->name('*.md')
+            ->name(['*.html', '*.md', '*.blade.php'])
             ->in($folderWatching);
 
         $hashContent = new Crc32ContentHash();
