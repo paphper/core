@@ -29,8 +29,9 @@ class Watch extends Command
     private $changedFiles = [];
     private $fileContentResolver;
     private $pageResolver;
+    private $manager;
 
-    public function __construct($config, $pageResolver, $fileContentResolver, $filesystem, $loop)
+    public function __construct($config, $pageResolver, $fileContentResolver, $filesystem, $loop, $manager)
     {
         parent::__construct();
         $this->config = $config;
@@ -38,6 +39,7 @@ class Watch extends Command
         $this->fileContentResolver = $fileContentResolver;
         $this->filesystem = $filesystem;
         $this->loop = $loop;
+        $this->manager = $manager;
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
@@ -59,7 +61,7 @@ class Watch extends Command
         $this->watcher = new ResourceWatcher($resourceCache, $finder, $hashContent);
         $this->watcher->initialize();
 
-        $generator = new SiteGenerator($this->pageResolver, $this->fileContentResolver, $this->config, $this->filesystem, $this->loop);
+        $generator = new SiteGenerator($this->pageResolver, $this->fileContentResolver, $this->config, $this->filesystem, $this->loop, $this->manager);
         $generator->build();
 
         $this->loop->addPeriodicTimer(1, function () {

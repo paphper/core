@@ -45,9 +45,12 @@ $pageResolvers = new FilesystemPageResolver($config, $filesystem);
 $configData = include getBaseDir() . '/config.php';
 $devConfig  = array_merge($configData, ['is_dev' => true]);
 
+$manager = new \Intervention\Image\ImageManager(array('driver' => 'gd'));
+
 $app = new Application();
 
-$app->add(new Watch(new Config($devConfig), $pageResolvers, $fileContentResolver, $filesystem, $loop));
-$app->add(new Build(new Config($configData), $pageResolvers, $fileContentResolver, $filesystem, $loop));
+$app->add(new Watch(new Config($devConfig), $pageResolvers, $fileContentResolver, $filesystem, $loop, $manager));
+$app->add(new Build(new Config($configData), $pageResolvers, $fileContentResolver, $filesystem, $loop, $manager));
+$app->add(new \Paphper\Commands\Resize($loop, $filesystem, new Config($configData), $manager));
 
 $app->run();
