@@ -229,7 +229,9 @@ class SiteGenerator
             $copy = $source->copy($target);
             await($copy, $this->loop);
 
-            if (isset($sizes[$image])) {
+            if (!empty($sizes[$image])) {
+                $this->io->title('Resizing '.$image);
+                $this->io->listing($sizes[$image]);
                 foreach ($sizes[$image] as $size) {
                     $promise = $this->filesystem->file($sourceImage)->getContents()->then(function ($content) use ($image, $size) {
                         $resizeFile = $this->config->getBuildBaseFolder().(new ImageNameResolver($image, $size))->getFilename();
@@ -243,5 +245,4 @@ class SiteGenerator
             }
         }
     }
-
 }
