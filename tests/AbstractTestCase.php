@@ -2,8 +2,8 @@
 
 namespace Tests;
 
-use Intervention\Image\ImageManager;
 use function Clue\React\Block\await;
+use Intervention\Image\ImageManager;
 use Paphper\Config;
 use Paphper\FileContentResolver;
 use Paphper\FileTypeResolvers\BladeResolver;

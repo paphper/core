@@ -2,6 +2,7 @@
 
 namespace Paphper\Responses;
 
+use Intervention\Image\ImageManager;
 use Paphper\Config;
 use Paphper\Utils\Str;
 use Psr\Http\Message\ServerRequestInterface;
@@ -17,10 +18,10 @@ class Factory
         'svg',
     ];
 
-    public static function create(ServerRequestInterface $request, Config $config, FilesystemInterface $filesystem)
+    public static function create(ServerRequestInterface $request, Config $config, FilesystemInterface $filesystem, ImageManager $manager)
     {
         if (self::isImage($request->getUri()->getPath()) || self::isCss($request->getUri()->getPath())) {
-            return new Asset($request, $config, $filesystem);
+            return new Asset($request, $config, $filesystem, $manager);
         }
 
         return new Html($request, $config, $filesystem);

@@ -81,7 +81,7 @@ class Watch extends Command
         });
 
         $server = new Server(function (ServerRequestInterface $request) use (&$firstBuild) {
-            $response = ResponseFactory::create($request, $this->config, $this->filesystem);
+            $response = ResponseFactory::create($request, $this->config, $this->filesystem, $this->manager);
 
             return $response->toResponse();
         });
