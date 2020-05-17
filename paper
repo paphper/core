@@ -45,7 +45,7 @@ $pageResolvers = new FilesystemPageResolver($config, $filesystem);
 $configData = include getBaseDir() . '/config.php';
 $devConfig  = array_merge($configData, ['is_dev' => true]);
 
-$manager = new \Intervention\Image\ImageManager(array('driver' => 'gd'));
+$manager = new \Intervention\Image\ImageManager(['driver' => 'gd']);
 
 $app = new Application();
 

@@ -230,7 +230,7 @@ class SiteGenerator
             await($copy, $this->loop);
 
             if (!empty($sizes[$image])) {
-                $this->io->title('Resizing '.$image);
+                $this->io->section('Resizing '.$image);
                 $this->io->listing($sizes[$image]);
                 foreach ($sizes[$image] as $size) {
                     $promise = $this->filesystem->file($sourceImage)->getContents()->then(function ($content) use ($image, $size) {

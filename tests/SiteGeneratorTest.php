@@ -21,7 +21,7 @@ class SiteGeneratorTest extends AbstractTestCase
 
     public function testSiteGeneration()
     {
-        $generator = new SiteGenerator($this->pageResolvers, $this->fileContentResolver, $this->config, $this->filesystem, $this->loop);
+        $generator = new SiteGenerator($this->pageResolvers, $this->fileContentResolver, $this->config, $this->filesystem, $this->loop, $this->imageManager);
         $generator->build();
 
         $this->assertTrue(file_exists($this->baseDir.'/Mocks/build/non-html/index.html'));
