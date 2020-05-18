@@ -35,7 +35,7 @@ class CssTest extends AbstractTestCase
 
         file_put_contents($this->config->getBuildBaseFolder().'/style.css', $content);
 
-        $html = new Asset($request, $this->config, $this->filesystem);
+        $html = new Asset($request, $this->config, $this->filesystem, $this->imageManager);
         $response = $html->toResponse();
 
         $promise = $response->then(function (Response $response) use ($content) {
@@ -61,7 +61,7 @@ class CssTest extends AbstractTestCase
 
         file_put_contents($this->config->getBuildBaseFolder().'/style.css', $content);
 
-        $html = new Asset($request, $this->config, $this->filesystem);
+        $html = new Asset($request, $this->config, $this->filesystem, $this->imageManager);
         $response = $html->toResponse();
 
         $promise = $response->then(function (Response $response) use ($content) {

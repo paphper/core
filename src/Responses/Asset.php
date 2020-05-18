@@ -19,9 +19,9 @@ class Asset extends AbstractResponse
 
     public function __construct(ServerRequestInterface $request, Config $config, FilesystemInterface $filesystem, ImageManager $imageManager)
     {
-        parent::__construct($request, $config, $filesystem,);
+        parent::__construct($request, $config, $filesystem, );
         $path = $this->request->getUri()->getPath();
-        $filename = $this->config->getBuildBaseFolder() . '/' . $path;
+        $filename = $this->config->getBuildBaseFolder().'/'.$path;
         $this->filename = $this->removeMultipleSlashes($filename);
         $this->filesystem = $filesystem;
         $this->imageManager = $imageManager;
@@ -40,7 +40,7 @@ class Asset extends AbstractResponse
                     });
             }, function () {
                 $assetsFolder = $this->config->getAssetsBaseFolder();
-                $assetsImage = $this->removeMultipleSlashes($assetsFolder . '/' . $this->path);
+                $assetsImage = $this->removeMultipleSlashes($assetsFolder.'/'.$this->path);
 
                 $detector = new ImageSizeDetector([$assetsImage]);
                 $assetsImage = $detector->getOriginals()[0];
@@ -48,7 +48,7 @@ class Asset extends AbstractResponse
 
                 return $imageFile->exists()
                     ->then(function () use ($imageFile, $detector, $assetsImage) {
-                        $buildImagePath = $this->removeMultipleSlashes($this->config->getBuildBaseFolder() . '/' . $this->path);
+                        $buildImagePath = $this->removeMultipleSlashes($this->config->getBuildBaseFolder().'/'.$this->path);
                         $buildImageFolder = (new Str($buildImagePath))->getBeforeLast('/');
                         $directory = $this->filesystem->dir($buildImageFolder);
 
@@ -62,6 +62,7 @@ class Asset extends AbstractResponse
 
                                     [$width, $height] = explode('x', $size);
                                     $data = $this->imageManager->make($content)->resize($width, $height)->encode();
+
                                     return $this->filesystem->file($resizeFile)->putContents($data);
                                 });
                             }

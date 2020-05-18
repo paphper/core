@@ -16,6 +16,7 @@ class BuildFileResolver
         $this->filename = $filename;
         $folderParser = new FolderParser([$filename]);
         [$rawName] = $folderParser->parse();
+
         $this->name = str_replace($this->config->getPageBaseFolder(), $this->config->getBuildBaseFolder(), $rawName).'/index.html';
     }
 
