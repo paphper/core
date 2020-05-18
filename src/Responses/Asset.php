@@ -2,7 +2,10 @@
 
 namespace Paphper\Responses;
 
+use Intervention\Image\ImageManager;
 use Paphper\Config;
+use Paphper\Images\ImageNameResolver;
+use Paphper\Images\ImageSizeDetector;
 use Paphper\Utils\Str;
 use Psr\Http\Message\ServerRequestInterface;
 use React\Filesystem\FilesystemInterface;
@@ -12,14 +15,16 @@ use React\Promise\PromiseInterface;
 class Asset extends AbstractResponse
 {
     protected $fileExtension;
+    private $imageManager;
 
-    public function __construct(ServerRequestInterface $request, Config $config, FilesystemInterface $filesystem)
+    public function __construct(ServerRequestInterface $request, Config $config, FilesystemInterface $filesystem, ImageManager $imageManager)
     {
         parent::__construct($request, $config, $filesystem, );
         $path = $this->request->getUri()->getPath();
         $filename = $this->config->getBuildBaseFolder().'/'.$path;
         $this->filename = $this->removeMultipleSlashes($filename);
         $this->filesystem = $filesystem;
+        $this->imageManager = $imageManager;
         $this->fileExtension = (new Str($path))->getAfterLast('.');
     }
 
@@ -36,13 +41,32 @@ class Asset extends AbstractResponse
             }, function () {
                 $assetsFolder = $this->config->getAssetsBaseFolder();
                 $assetsImage = $this->removeMultipleSlashes($assetsFolder.'/'.$this->path);
+
+                $detector = new ImageSizeDetector([$assetsImage]);
+                $assetsImage = $detector->getOriginals()[0];
                 $imageFile = $this->filesystem->file($assetsImage);
 
                 return $imageFile->exists()
-                    ->then(function () use ($imageFile) {
+                    ->then(function () use ($imageFile, $detector, $assetsImage) {
                         $buildImagePath = $this->removeMultipleSlashes($this->config->getBuildBaseFolder().'/'.$this->path);
                         $buildImageFolder = (new Str($buildImagePath))->getBeforeLast('/');
                         $directory = $this->filesystem->dir($buildImageFolder);
+
+                        $sizes = $detector->getSizes();
+
+                        if (!empty($sizes[$assetsImage])) {
+                            foreach ($sizes[$assetsImage] as $size) {
+                                $imageFile->getContents()->then(function ($content) use ($assetsImage, $size) {
+                                    $finalImage = str_replace($this->config->getAssetsBaseFolder(), $this->config->getBuildBaseFolder(), $assetsImage);
+                                    $resizeFile = (new ImageNameResolver($finalImage, $size))->getFilename();
+
+                                    [$width, $height] = explode('x', $size);
+                                    $data = $this->imageManager->make($content)->resize($width, $height)->encode();
+
+                                    return $this->filesystem->file($resizeFile)->putContents($data);
+                                });
+                            }
+                        }
 
                         $directory->stat()
                             ->then(function () {

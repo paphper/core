@@ -17,4 +17,17 @@ class BuildFileResolverTest extends AbstractTestCase
         $resolver = new BuildFileResolver($this->config, $this->config->getPageBaseFolder().'/blogs/testing/naren.md');
         $this->assertSame($this->config->getBuildBaseFolder().'/blogs/testing/naren', $resolver->getFolder());
     }
+
+    public function testForMdFolder()
+    {
+        $resolver = new BuildFileResolver($this->config, $this->config->getPageBaseFolder().'/index.md');
+        $this->assertSame($this->config->getBuildBaseFolder(), $resolver->getFolder());
+    }
+
+    public function testForBladeFolder()
+    {
+        $resolver = new BuildFileResolver($this->config, $this->config->getPageBaseFolder().'/index.blade.php');
+
+        $this->assertSame($this->config->getBuildBaseFolder(), $resolver->getFolder());
+    }
 }

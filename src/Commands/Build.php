@@ -15,9 +15,10 @@ class Build extends Command
     private $fileContentResolver;
     private $filesystem;
     private $loop;
+    private $manager;
     private $io;
 
-    public function __construct($config, $pageResolvers, $fileContentResolver, $filesystem, $loop)
+    public function __construct($config, $pageResolvers, $fileContentResolver, $filesystem, $loop, $manager)
     {
         parent::__construct();
         $this->config = $config;
@@ -25,12 +26,13 @@ class Build extends Command
         $this->fileContentResolver = $fileContentResolver;
         $this->filesystem = $filesystem;
         $this->loop = $loop;
+        $this->manager = $manager;
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new PaphperStyle($input, $output);
-        $generator = new SiteGenerator($this->pageResolvers, $this->fileContentResolver, $this->config, $this->filesystem, $this->loop, $io);
+        $generator = new SiteGenerator($this->pageResolvers, $this->fileContentResolver, $this->config, $this->filesystem, $this->loop, $this->manager, $io);
         $generator->build();
 
         return 0;

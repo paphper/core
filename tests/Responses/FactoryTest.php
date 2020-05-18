@@ -18,7 +18,7 @@ class FactoryTest extends AbstractTestCase
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getUri')->willReturn($url);
 
-        $factory = Factory::create($request, $this->config, $this->filesystem);
+        $factory = Factory::create($request, $this->config, $this->filesystem, $this->imageManager);
         $this->assertInstanceOf(Html::class, $factory);
     }
 
@@ -29,7 +29,7 @@ class FactoryTest extends AbstractTestCase
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getUri')->willReturn($url);
 
-        $factory = Factory::create($request, $this->config, $this->filesystem);
+        $factory = Factory::create($request, $this->config, $this->filesystem, $this->imageManager);
         $this->assertInstanceOf(Asset::class, $factory);
     }
 
@@ -40,7 +40,7 @@ class FactoryTest extends AbstractTestCase
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getUri')->willReturn($url);
 
-        $factory = Factory::create($request, $this->config, $this->filesystem);
+        $factory = Factory::create($request, $this->config, $this->filesystem, $this->imageManager);
         $this->assertInstanceOf(Asset::class, $factory);
     }
 }

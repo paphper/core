@@ -3,8 +3,11 @@
 namespace Paphper;
 
 use function Clue\React\Block\await;
+use Intervention\Image\ImageManager;
 use Paphper\Contracts\PageResolverInterface;
 use Paphper\Extractors\AssetExtractor;
+use Paphper\Images\ImageNameResolver;
+use Paphper\Images\ImageSizeDetector;
 use Paphper\Utils\Str;
 use React\EventLoop\LoopInterface;
 use React\Filesystem\FilesystemInterface;
@@ -19,8 +22,9 @@ class SiteGenerator
     private $io;
     private $pageResolver;
     private $contentResolver;
+    private $imageManager;
 
-    public function __construct(PageResolverInterface $pageResolver, FileContentResolver $contentResolver, Config $config, FilesystemInterface $filesystem, LoopInterface $loop, SymfonyStyle $io = null)
+    public function __construct(PageResolverInterface $pageResolver, FileContentResolver $contentResolver, Config $config, FilesystemInterface $filesystem, LoopInterface $loop, ImageManager $imageManager, SymfonyStyle $io = null)
     {
         $this->pageResolver = $pageResolver;
         $this->config = $config;
@@ -28,6 +32,7 @@ class SiteGenerator
         $this->loop = $loop;
         $this->io = $io;
         $this->contentResolver = $contentResolver;
+        $this->imageManager = $imageManager;
         if (null === $io) {
             $this->io = $this->getMockIo();
         }
@@ -68,7 +73,12 @@ class SiteGenerator
         $imageDirectories = [];
 
         $this->io->section('Processing assets');
-        foreach ($images as $key => $image) {
+
+        $imageSizeParser = new ImageSizeDetector($images);
+
+        $this->io->listing($imageSizeParser->getOriginals());
+
+        foreach ($imageSizeParser->getOriginals() as $key => $image) {
             if (!(new Str($image))->startsWith('/')) {
                 unset($images[$key]);
                 $this->io->warning(sprintf('asset %s does not seem to start with /. This breaks the asset path. Please fix', $image));
@@ -99,15 +109,8 @@ class SiteGenerator
         $this->io->success('');
 
         $this->io->section('Copying assets to right folders');
-        $this->io->listing($images);
-        foreach ($images as $image) {
-            $sourceImage = $this->config->getAssetsBaseFolder().$image;
-            $targetImage = $this->config->getBuildBaseFolder().$image;
-            $source = $this->filesystem->file($sourceImage);
-            $target = $this->filesystem->file($targetImage);
-            $copy = $source->copy($target);
-            await($copy, $this->loop);
-        }
+        $this->io->listing($imageSizeParser->getOriginals());
+        $this->processImages($imageSizeParser);
         $this->io->success('Done! Site successfully generated!');
     }
 
@@ -168,12 +171,12 @@ class SiteGenerator
                 foreach ($pages as $filename) {
                     $htmlGenerator = $this->contentResolver->resolve($filename);
                     $promise = $htmlGenerator->getPageContent()
-                ->then(function ($content) use ($filename) {
-                    $builtFilename = $this->pageResolver->getBuildFilename($filename);
-                    $this->io->text(sprintf('* %s', $builtFilename));
+                        ->then(function ($content) use ($filename) {
+                            $builtFilename = $this->pageResolver->getBuildFilename($filename);
+                            $this->io->text(sprintf('* %s', $builtFilename));
 
-                    return $this->filesystem->file($builtFilename)->putContents($content);
-                });
+                            return $this->filesystem->file($builtFilename)->putContents($content);
+                        });
                     await($promise, $this->loop);
                 }
             });
@@ -205,5 +208,41 @@ class SiteGenerator
                 return $this->filesystem->dir($this->config->getBuildBaseFolder())->removeRecursive();
             }, function (\Exception $exception) {
             });
+    }
+
+    /**
+     * @param array $images
+     *
+     * @throws \Exception
+     */
+    private function processImages(ImageSizeDetector $images): void
+    {
+        $sizes = $images->getSizes();
+        foreach ($images->getOriginals() as $image) {
+            if (!(new Str($image))->startsWith('/')) {
+                continue;
+            }
+            $sourceImage = $this->config->getAssetsBaseFolder().$image;
+            $targetImage = $this->config->getBuildBaseFolder().$image;
+            $source = $this->filesystem->file($sourceImage);
+            $target = $this->filesystem->file($targetImage);
+            $copy = $source->copy($target);
+            await($copy, $this->loop);
+
+            if (!empty($sizes[$image])) {
+                $this->io->section('Resizing '.$image);
+                $this->io->listing($sizes[$image]);
+                foreach ($sizes[$image] as $size) {
+                    $promise = $this->filesystem->file($sourceImage)->getContents()->then(function ($content) use ($image, $size) {
+                        $resizeFile = $this->config->getBuildBaseFolder().(new ImageNameResolver($image, $size))->getFilename();
+                        [$width, $height] = explode('x', $size);
+                        $data = $this->imageManager->make($content)->resize($width, $height)->encode();
+
+                        return $this->filesystem->file($resizeFile)->putContents($data);
+                    });
+                    await($promise, $this->loop);
+                }
+            }
+        }
     }
 }

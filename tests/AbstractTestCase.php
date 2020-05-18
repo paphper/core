@@ -3,6 +3,7 @@
 namespace Tests;
 
 use function Clue\React\Block\await;
+use Intervention\Image\ImageManager;
 use Paphper\Config;
 use Paphper\FileContentResolver;
 use Paphper\FileTypeResolvers\BladeResolver;
@@ -21,6 +22,7 @@ class AbstractTestCase extends TestCase
     protected $config;
     protected $fileContentResolver;
     protected $pageResolvers;
+    protected $imageManager;
 
     public function setUp(): void
     {
@@ -38,6 +40,7 @@ class AbstractTestCase extends TestCase
         $this->fileContentResolver->add('.md', $mdResolver);
         $this->fileContentResolver->add('.blade.php', $bladeResolver);
         $this->pageResolvers = new FilesystemPageResolver($this->config, $this->filesystem);
+        $this->imageManager = new ImageManager(['driver' => 'gd']);
     }
 
     public function deleteBuildFolder()

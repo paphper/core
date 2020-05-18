@@ -10,10 +10,10 @@ class FolderParser
     private $replaces = [
         '/index.html',
         '/index.md',
+        '/index.blade.php',
         '.md',
         '.html',
         '.blade.php',
-        '/index.blade.php',
     ];
     private $sortedArr = [];
 
