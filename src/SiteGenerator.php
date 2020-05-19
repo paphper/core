@@ -111,6 +111,18 @@ class SiteGenerator
         $this->io->section('Copying assets to right folders');
         $this->io->listing($imageSizeParser->getOriginals());
         $this->processImages($imageSizeParser);
+
+        try {
+            $this->io->section('trying to change the owner to run as a webserver');
+            $baseFolder = $this->config->getBuildBaseFolder();
+            $promise = $this->filesystem->dir($baseFolder)->chownRecursive('www-data', 'www-data')->then(function () {
+                return 'ths is a test';
+            });
+            await($promise, $this->loop);
+        } catch (\Exception $exception) {
+            $this->io->warning('could not change the ownership, run chown www-data:www-data '.$this->config->getBuildBaseFolder() .' to run in a webserver.');
+        }
+
         $this->io->success('Done! Site successfully generated!');
     }
 
