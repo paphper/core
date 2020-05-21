@@ -52,6 +52,7 @@ abstract class AbstractResponse
             'png' => ['Content-Type' => 'image/png'],
             'jpeg' => ['Content-Type' => 'image/jpeg'],
             'jpg' => ['Content-Type' => 'image/jpg'],
+            'ico' => ['Content-Type' => 'image/x-icon'],
             'css' => ['Content-Type' => 'text/css'],
         ];
 
