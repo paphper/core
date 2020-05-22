@@ -54,7 +54,7 @@ class AssetExtractor
 
     private function addAsset(string $asset)
     {
-        if ((new Str($asset))->startsWith('http')) {
+        if ((new Str($asset))->startsWith('http') || (new Str($asset))->startsWith('//')) {
             return;
         }
 
