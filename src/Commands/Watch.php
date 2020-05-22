@@ -88,7 +88,7 @@ class Watch extends Command
 
         $this->openBrowser($port);
 
-        $socket = new \React\Socket\Server('127.0.0.1:'.$port, $this->loop);
+        $socket = new \React\Socket\Server('0.0.0.0:'.$port, $this->loop);
         $server->listen($socket);
 
         $this->loop->run();
