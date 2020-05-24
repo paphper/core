@@ -10,30 +10,27 @@ use React\Filesystem\FilesystemInterface;
 
 class Factory
 {
-    private static $imageFileExtensions = [
+    private static $assetFileExtensions = [
         'jpg',
         'jpeg',
         'png',
         'ico',
         'svg',
+        'css',
+        'js',
     ];
 
     public static function create(ServerRequestInterface $request, Config $config, FilesystemInterface $filesystem, ImageManager $manager)
     {
-        if (self::isImage($request->getUri()->getPath()) || self::isCss($request->getUri()->getPath())) {
+        if (self::isAsset($request->getUri()->getPath())) {
             return new Asset($request, $config, $filesystem, $manager);
         }
 
         return new Html($request, $config, $filesystem);
     }
 
-    public static function isCss(string $path)
+    public static function isAsset(string $path)
     {
-        return (new Str($path))->endsWith('css');
-    }
-
-    private static function isImage(string $path)
-    {
-        return (new Str(strtolower($path)))->endsWithAny(self::$imageFileExtensions);
+        return (new Str(strtolower($path)))->endsWithAny(self::$assetFileExtensions);
     }
 }

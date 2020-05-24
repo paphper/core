@@ -12,7 +12,6 @@ use Paphper\Utils\Str;
 use React\EventLoop\LoopInterface;
 use React\Filesystem\FilesystemInterface;
 use React\Filesystem\Node\File;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 class SiteGenerator
 {
@@ -23,25 +22,26 @@ class SiteGenerator
     private $pageResolver;
     private $contentResolver;
     private $imageManager;
+    private $input;
+    private $output;
 
-    public function __construct(PageResolverInterface $pageResolver, FileContentResolver $contentResolver, Config $config, FilesystemInterface $filesystem, LoopInterface $loop, ImageManager $imageManager, SymfonyStyle $io = null)
+    public function __construct(PageResolverInterface $pageResolver, FileContentResolver $contentResolver, Config $config, FilesystemInterface $filesystem, LoopInterface $loop, ImageManager $imageManager, $io = null)
     {
         $this->pageResolver = $pageResolver;
         $this->config = $config;
         $this->filesystem = $filesystem;
         $this->loop = $loop;
         $this->io = $io;
-        $this->contentResolver = $contentResolver;
-        $this->imageManager = $imageManager;
         if (null === $io) {
             $this->io = $this->getMockIo();
         }
+
+        $this->contentResolver = $contentResolver;
+        $this->imageManager = $imageManager;
     }
 
     public function build()
     {
-        $this->io->title('The site creating has begun');
-
         $this->io->section('Removing build folder for fresh start');
         await($this->removeBuildFolder(), $this->loop);
         $this->io->success('Folder Removed!');
@@ -60,19 +60,16 @@ class SiteGenerator
             return;
         }
 
-        $this->io->section('Scanning pages for used assets');
         $images = [];
         await($this->lookForImages($images), $this->loop);
         if (empty($images)) {
             return;
         }
-
-        $images = array_unique($images);
         $this->io->listing($images);
 
         $imageDirectories = [];
 
-        $this->io->section('Processing assets');
+        $this->io->section('Scanning pages for used assets');
 
         $imageSizeParser = new ImageSizeDetector($images);
 
@@ -138,27 +135,7 @@ class SiteGenerator
     public function getMockIo()
     {
         return new class() {
-            public function text(...$arg)
-            {
-            }
-
-            public function title(...$arg)
-            {
-            }
-
-            public function section(...$arg)
-            {
-            }
-
-            public function success(...$arg)
-            {
-            }
-
-            public function listing(...$arg)
-            {
-            }
-
-            public function warning(...$arg)
+            public function __call($name, $args)
             {
             }
         };
@@ -225,24 +202,30 @@ class SiteGenerator
             $sourceImage = $this->config->getAssetsBaseFolder().$image;
             $targetImage = $this->config->getBuildBaseFolder().$image;
             $source = $this->filesystem->file($sourceImage);
-            $target = $this->filesystem->file($targetImage);
-            $copy = $source->copy($target);
-            await($copy, $this->loop);
 
-            if (!empty($sizes[$image])) {
-                $this->io->section('Resizing '.$image);
-                $this->io->listing($sizes[$image]);
-                foreach ($sizes[$image] as $size) {
-                    $promise = $this->filesystem->file($sourceImage)->getContents()->then(function ($content) use ($image, $size) {
-                        $resizeFile = $this->config->getBuildBaseFolder().(new ImageNameResolver($image, $size))->getFilename();
-                        [$width, $height] = explode('x', $size);
-                        $data = $this->imageManager->make($content)->resize($width, $height)->encode();
+            $promise = $source->exists()->then(function () use ($targetImage, $source, $image, $sourceImage, $sizes) {
+                $target = $this->filesystem->file($targetImage);
+                $copy = $source->copy($target);
+                await($copy, $this->loop);
+                if (!empty($sizes[$image])) {
+                    $this->io->section('Resizing '.$image);
+                    $this->io->listing($sizes[$image]);
+                    foreach ($sizes[$image] as $size) {
+                        $promise = $this->filesystem->file($sourceImage)->getContents()->then(function ($content) use ($image, $size) {
+                            $resizeFile = $this->config->getBuildBaseFolder().(new ImageNameResolver($image, $size))->getFilename();
+                            [$width, $height] = explode('x', $size);
+                            $data = $this->imageManager->make($content)->resize($width, $height)->encode();
 
-                        return $this->filesystem->file($resizeFile)->putContents($data);
-                    });
-                    await($promise, $this->loop);
+                            return $this->filesystem->file($resizeFile)->putContents($data);
+                        });
+                        await($promise, $this->loop);
+                    }
                 }
-            }
+            }, function () use ($image) {
+                $this->io->warning(sprintf('Asset %s missing but referenced in the html. Skipping', $image));
+            });
+
+            await($promise, $this->loop);
         }
     }
 }

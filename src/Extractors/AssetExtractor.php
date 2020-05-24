@@ -21,6 +21,9 @@ class AssetExtractor
         '//link' => [
             'attribute' => 'href',
         ],
+        '//script' => [
+            'attribute' => 'src',
+        ],
     ];
 
     public function __construct(string $content = null)
@@ -54,7 +57,8 @@ class AssetExtractor
 
     private function addAsset(string $asset)
     {
-        if ((new Str($asset))->startsWith('http')) {
+        $filename = new Str($asset);
+        if ($filename->startsWith('http') || $filename->startsWith('//')) {
             return;
         }
 
