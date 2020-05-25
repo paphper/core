@@ -132,7 +132,6 @@ class Watch extends Command
             $this->io->text(sprintf('failed opening browser. open at 0.0.0.0:%s in a browser', $port));
         }
 
-
         $socket = new \React\Socket\Server('0.0.0.0:'.$port, $this->loop);
         $server->listen($socket);
 

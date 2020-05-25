@@ -22,8 +22,6 @@ class SiteGenerator
     private $pageResolver;
     private $contentResolver;
     private $imageManager;
-    private $input;
-    private $output;
 
     public function __construct(PageResolverInterface $pageResolver, FileContentResolver $contentResolver, Config $config, FilesystemInterface $filesystem, LoopInterface $loop, ImageManager $imageManager, $io = null)
     {
