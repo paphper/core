@@ -16,7 +16,7 @@ class AssetExtractor
         ],
         "//*[contains(@style,'background-image')]" => [
             'attribute' => 'style',
-            'pattern' => "[url\((\s)?[?=(',\")]([-\/.\w.]+)[?=(',\")]]",
+            'pattern' => "[url\((\s)?[?=(',\")]{0,1}([-\/.\w.]+)[?=(',\")]{0,1}]",
         ],
         '//link' => [
             'attribute' => 'href',
