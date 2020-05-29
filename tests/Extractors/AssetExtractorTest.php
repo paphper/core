@@ -43,6 +43,7 @@ class AssetExtractorTest extends AbstractTestCase
                 $this->assertContains('narendra.bmp', $assetExtractor->getAssets());
                 $this->assertContains('saru.png', $assetExtractor->getAssets());
                 $this->assertContains('images/hel-lo/saru.png', $assetExtractor->getAssets());
+                $this->assertContains('/narendra.jpg', $assetExtractor->getAssets());
             });
 
         await($test, $this->loop);

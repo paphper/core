@@ -29,4 +29,17 @@ class BuildFileResolver
     {
         return (new Str($this->name))->getBeforeLast('/');
     }
+
+    public function getUrlPath()
+    {
+        $folder = $this->getFolder();
+        $path = (new Str($folder))->removeAll($this->config->getBuildBaseFolder());
+
+        if(!(new Str($path))->startsWith('/')){
+            return '/' . $path;
+        }
+
+        return $path;
+    }
+
 }

@@ -30,7 +30,22 @@ class Blade implements ContentInterface
         $filename = (new Str($this->filename))->getBeforeLast('.blade.php');
         $filename = (new Str($filename))->replaceAllWith($this->config->getPageBaseFolder(), '');
 
-        $content = $this->blade->render('pages'.$filename);
+        /*
+         *  because we are making the root of the folder base view file
+         *  we need to build the page from the root
+         * For eg. for the folder path
+         * - pages
+         * - layouts
+         * we load all the folders for blade so that she can use @include etc.
+         * but for this to work the blade needs to be loaded as `pages.` pagename for pagename.blade.php
+         * so we get the name of the base folder and append to whatever the filename is, hence getting that folder to append
+         */
+        $relativePageFolder = (new Str($this->config->getPageBaseFolder()))->getAfterLast('/');
+
+        /*
+         * added the folder name here explained above.
+         */
+        $content = $this->blade->render($relativePageFolder.$filename);
 
         $meta = new PaperTagContentParser($this->config, $this->filesystem, $content);
 

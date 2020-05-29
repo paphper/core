@@ -16,10 +16,13 @@ class AssetExtractor
         ],
         "//*[contains(@style,'background-image')]" => [
             'attribute' => 'style',
-            'pattern' => "[url\((\s)?[?=(',\")]([-\/.\w.]+)[?=(',\")]]",
+            'pattern' => "[url\((\s)?[?=(',\")]{0,1}([-\/.\w.]+)[?=(',\")]{0,1}]",
         ],
         '//link' => [
             'attribute' => 'href',
+        ],
+        '//script' => [
+            'attribute' => 'src',
         ],
     ];
 
@@ -54,7 +57,8 @@ class AssetExtractor
 
     private function addAsset(string $asset)
     {
-        if ((new Str($asset))->startsWith('http')) {
+        $filename = new Str($asset);
+        if ($filename->startsWith('http') || $filename->startsWith('//')) {
             return;
         }
 
