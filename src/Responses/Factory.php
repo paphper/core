@@ -18,6 +18,8 @@ class Factory
         'svg',
         'css',
         'js',
+        'txt',
+        'xml',
     ];
 
     public static function create(ServerRequestInterface $request, Config $config, FilesystemInterface $filesystem, ImageManager $manager)

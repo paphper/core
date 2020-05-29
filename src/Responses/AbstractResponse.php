@@ -55,6 +55,8 @@ abstract class AbstractResponse
             'ico' => ['Content-Type' => 'image/x-icon'],
             'css' => ['Content-Type' => 'text/css'],
             'js' => ['Content-Type' => 'text/javascript'],
+            'txt' => ['Content-Type' => 'text/plain'],
+            'xml' => ['Content-Type' => 'text/xml'],
         ];
 
         return $imageMimeTypes[$imageType];

@@ -41,6 +41,11 @@ class Str
         return str_replace($search, $replace, $this);
     }
 
+    public function removeAll(string $search)
+    {
+        return str_replace($search, '', $this);
+    }
+
     public function replaceLastWith(string $search, string $replace)
     {
         $length = strlen($search);

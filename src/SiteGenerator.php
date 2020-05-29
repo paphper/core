@@ -110,17 +110,7 @@ class SiteGenerator
 
         $this->io->section('Generating sitemap!');
 
-        $siteMapCreation = $this->pageResolver->getPages()
-        ->then(function ($pages){
-            $generator = new SitemapGenerator('example.com', $this->config->getBuildBaseFolder());
-            foreach ($pages as $page){
-                $generator->addURL($page, new \DateTime(), 'always', 0.5);
-            }
-            $generator->createSitemap();
-            $generator->setSitemapFileName("sitemap.xml");
-            $generator->writeSitemap();
-            $generator->updateRobots();
-        });
+        $siteMapCreation = $this->createSitemap();
 
         await($siteMapCreation, $this->loop);
 
@@ -243,5 +233,25 @@ class SiteGenerator
 
             await($promise, $this->loop);
         }
+    }
+
+    private function createSitemap(): \React\Promise\PromiseInterface
+    {
+        return $this->pageResolver->getPages()
+            ->then(function ($pages) {
+                $generator = new SitemapGenerator('example.com', $this->config->getBuildBaseFolder());
+                foreach ($pages as $page) {
+                    $generator->addURL($this->getUrl($page), new \DateTime(), 'always', 0.5);
+                }
+                $generator->createSitemap();
+                $generator->setSitemapFileName("sitemap.xml");
+                $generator->writeSitemap();
+                $generator->updateRobots();
+            });
+    }
+
+    private function getUrl($path)
+    {
+        return (new BuildFileResolver($this->config, $path))->getUrlPath();
     }
 }
