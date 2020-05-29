@@ -112,7 +112,7 @@ class Watch extends Command
                         $buildFile = new BuildFileResolver($this->config, $filename);
                         (new FileCreator($this->filesystem, $buildFile->getName(), $content))->writeFile()
                             ->then(function () use ($buildFile) {
-                                $this->io->text(sprintf('%s build', $buildFile->getName()));
+                                $this->io->text(sprintf('%s built', $buildFile->getName()));
                             });
                     });
             }

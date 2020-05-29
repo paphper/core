@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b9314cf45d46f235534a03c425d7bdd5",
+    "content-hash": "c4d048cd9937d5a8306dca3c0f3e0aab",
     "packages": [
         {
             "name": "cakephp/core",
@@ -409,6 +409,62 @@
                 "url"
             ],
             "time": "2019-07-01T23:21:34+00:00"
+        },
+        {
+            "name": "icamys/php-sitemap-generator",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/icamys/php-sitemap-generator.git",
+                "reference": "022fe40af04df825c192f75568106ef8ca5dd6c3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/icamys/php-sitemap-generator/zipball/022fe40af04df825c192f75568106ef8ca5dd6c3",
+                "reference": "022fe40af04df825c192f75568106ef8ca5dd6c3",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-dom": "*",
+                "ext-mbstring": "*",
+                "ext-simplexml": "*",
+                "ext-spl": "*",
+                "ext-zlib": "*",
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "php-mock/php-mock-phpunit": "^2.5",
+                "phpunit/phpunit": "^8.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Icamys\\SitemapGenerator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Prisacari Dmitrii",
+                    "email": "prisacari.dmitrii@gmail.com",
+                    "homepage": "http://github.com/icamys/"
+                }
+            ],
+            "description": "Simple PHP sitemap generator.",
+            "homepage": "https://github.com/icamys/php-sitemap-generator",
+            "keywords": [
+                "PSR-1",
+                "PSR-2",
+                "PSR-4",
+                "Sitemap",
+                "generator",
+                "php"
+            ],
+            "time": "2020-02-11T19:00:23+00:00"
         },
         {
             "name": "illuminate/container",
@@ -1425,16 +1481,16 @@
         },
         {
             "name": "react/filesystem",
-            "version": "v0.1.2",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/reactphp/filesystem.git",
-                "reference": "766cdef9ba806367114f0c5ba36ea2a6eec8ccd2"
+                "reference": "fc89dc26ff7bda9e864798f8fd5b705c437a5cd9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reactphp/filesystem/zipball/766cdef9ba806367114f0c5ba36ea2a6eec8ccd2",
-                "reference": "766cdef9ba806367114f0c5ba36ea2a6eec8ccd2",
+                "url": "https://api.github.com/repos/reactphp/filesystem/zipball/fc89dc26ff7bda9e864798f8fd5b705c437a5cd9",
+                "reference": "fc89dc26ff7bda9e864798f8fd5b705c437a5cd9",
                 "shasum": ""
             },
             "require": {
@@ -1449,9 +1505,6 @@
             "require-dev": {
                 "clue/block-react": "^1.1",
                 "phpunit/phpunit": "^6.0 || ^5.0 || ^4.8"
-            },
-            "suggest": {
-                "ext-eio": "^1.2"
             },
             "type": "library",
             "autoload": {
@@ -1475,10 +1528,9 @@
             "description": "Asynchronous filesystem abstraction.",
             "keywords": [
                 "asynchronous",
-                "eio",
                 "filesystem"
             ],
-            "time": "2018-10-22T12:10:29+00:00"
+            "time": "2020-05-08T09:44:27+00:00"
         },
         {
             "name": "react/http",
@@ -5358,7 +5410,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "react/filesystem": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

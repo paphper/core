@@ -2,6 +2,7 @@
 
 namespace Paphper;
 
+use Icamys\SitemapGenerator\SitemapGenerator;
 use function Clue\React\Block\await;
 use Intervention\Image\ImageManager;
 use Paphper\Contracts\PageResolverInterface;
@@ -106,6 +107,23 @@ class SiteGenerator
         $this->io->section('Copying assets to right folders');
         $this->io->listing($imageSizeParser->getOriginals());
         $this->processImages($imageSizeParser);
+
+        $this->io->section('Generating sitemap!');
+
+        $siteMapCreation = $this->pageResolver->getPages()
+        ->then(function ($pages){
+            $generator = new SitemapGenerator('example.com', $this->config->getBuildBaseFolder());
+            foreach ($pages as $page){
+                $generator->addURL($page, new \DateTime(), 'always', 0.5);
+            }
+            $generator->createSitemap();
+            $generator->setSitemapFileName("sitemap.xml");
+            $generator->writeSitemap();
+            $generator->updateRobots();
+        });
+
+        await($siteMapCreation, $this->loop);
+
         $this->io->success('Done! Site successfully generated!');
     }
 
