@@ -16,11 +16,12 @@
         "react/http": "^0.8.6",
         "react/stream": "^1.1",
         "symfony/console": "^5.0",
-        "react/filesystem": "^0.1.2",
+        "react/filesystem": "dev-master",
         "yosymfony/resource-watcher": "^2.0",
         "symfony/dom-crawler": "^5.0",
         "jenssegers/blade": "^1.3",
-        "intervention/image": "^2.5"
+        "intervention/image": "^2.5",
+        "icamys/php-sitemap-generator": "^2.0"
     },
     "replace": {
         "paphper/contracts":  "self.version"

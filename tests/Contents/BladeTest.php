@@ -9,7 +9,7 @@ use Tests\AbstractTestCase;
 
 class BladeTest extends AbstractTestCase
 {
-    public function testThisWorks()
+    public function testBladeContentIsSuccessfullyGenerated()
     {
         $baseFolder = $this->config->getPageBaseFolder();
         $lBlade = new \Jenssegers\Blade\Blade((new Str($baseFolder))->getBeforeLast('/'), $this->config->getCacheDir());
@@ -17,7 +17,7 @@ class BladeTest extends AbstractTestCase
 
         $content = await($blade->getPageContent(), $this->loop);
 
-//        var_dump($content);
+
         $this->assertSame($this->getBladeContent(), $content);
     }
 
@@ -28,6 +28,8 @@ class BladeTest extends AbstractTestCase
 
 <head>
     <title>This is a test</title>
+    <script src="/script.js"></script>
+    <script src="/scr.js"></script>
 </head>
 
 <body>
